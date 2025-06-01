@@ -1,109 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Okena</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: black;
-      position: relative;
-      height: 100vh;
-    }
-    #video-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 512px;
-      height: 400px;
-      overflow: hidden;
-      transform: translate(-50%, -50%);
-      pointer-events: auto;
-      z-index: 10;
-      border-radius: 10px;
-    }
-    video {
-      position: relative;
-      top: -255px;
-      width: 512px;
-      height: 910px;
-      object-fit: cover;
-      border: none;
-      display: block;
-    }
-    canvas {
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-  </style>
-</head>
-<body>
-  <div id="video-container">
-    <video autoplay playsinline loop>
-      <source src="https://raw.githubusercontent.com/quyetnv1399/myyyy/main/meme.mp4" type="video/mp4">
-    </video>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Okena</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        position: relative;
+        height: 100vh;
+      }
+      #video-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 512px;
+        height: 400px;
+        overflow: hidden;
+        transform: translate(-50%, -50%);
+        pointer-events: auto;
+        z-index: 10;
+        border-radius: 10px;
+      }
+      video {
+        position: relative;
+        top: -255px;
+        width: 512px;
+        height: 910px;
+        object-fit: cover;
+        border: none;
+        display: block;
+      }
+      canvas {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="video-container">
+      <video id="myVideo" autoplay playsinline loop>
+        <source
+          src="https://raw.githubusercontent.com/quyetnv1399/myyyy/main/meme.mp4"
+          type="video/mp4"
+        />
+      </video>
+    </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script>
-    let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 0);
-    document.body.appendChild(renderer.domElement);
-
-    const meteorCount = 100;
-    const meteors = [];
-
-    for (let i = 0; i < meteorCount; i++) {
-      let geometry = new THREE.BufferGeometry();
-      let positions = new Float32Array([0, 0, 0, -0.5, -1.5, 0]);
-      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      let material = new THREE.LineBasicMaterial({ color: 0xffffff });
-      let meteor = new THREE.Line(geometry, material);
-
-      meteor.position.set(
-        (Math.random() - 0.5) * 50,
-        Math.random() * 30,
-        (Math.random() - 0.5) * 20
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script>
+      const video = document.getElementById("myVideo");
+      video.muted = false;
+    </script>
+    <script>
+      let scene = new THREE.Scene();
+      let camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
       );
-      meteor.velocity = new THREE.Vector3(-0.03, -0.1, 0);
-      scene.add(meteor);
-      meteors.push(meteor);
-    }
-
-    camera.position.z = 20;
-
-    function animate() {
-      requestAnimationFrame(animate);
-      meteors.forEach((meteor) => {
-        meteor.position.add(meteor.velocity);
-        if (meteor.position.y < -20) {
-          meteor.position.y = Math.random() * 30;
-          meteor.position.x = (Math.random() - 0.5) * 50;
-        }
-      });
-      renderer.render(scene, camera);
-    }
-
-    animate();
-
-    window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+      let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
-</body>
+      renderer.setClearColor(0x000000, 0);
+      document.body.appendChild(renderer.domElement);
+
+      const meteorCount = 100;
+      const meteors = [];
+
+      for (let i = 0; i < meteorCount; i++) {
+        let geometry = new THREE.BufferGeometry();
+        let positions = new Float32Array([0, 0, 0, -0.5, -1.5, 0]);
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3)
+        );
+        let material = new THREE.LineBasicMaterial({ color: 0xffffff });
+        let meteor = new THREE.Line(geometry, material);
+
+        meteor.position.set(
+          (Math.random() - 0.5) * 50,
+          Math.random() * 30,
+          (Math.random() - 0.5) * 20
+        );
+        meteor.velocity = new THREE.Vector3(-0.03, -0.1, 0);
+        scene.add(meteor);
+        meteors.push(meteor);
+      }
+
+      camera.position.z = 20;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        meteors.forEach((meteor) => {
+          meteor.position.add(meteor.velocity);
+          if (meteor.position.y < -20) {
+            meteor.position.y = Math.random() * 30;
+            meteor.position.x = (Math.random() - 0.5) * 50;
+          }
+        });
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
 </html>
